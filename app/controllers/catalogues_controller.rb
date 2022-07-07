@@ -1,3 +1,5 @@
+require "csv"
+
 class CataloguesController < ApplicationController
   before_action :set_catalogue, only: %i[ show update destroy ]
 
@@ -15,11 +17,21 @@ class CataloguesController < ApplicationController
   # POST /catalogues
   # POST /catalogues.json
   def create
-    @catalogue = Catalogue.new(catalogue_params)
+    begin
+      @items = []
+      @file = "./db/netflix_titles.csv"
+      CSV.foreach(@file, headers: true) do |row|
+        @items << row.to_h
+      end
 
-    if @catalogue.save
-      render :show, status: :created, location: @catalogue
-    else
+      @items.uniq!
+
+      Catalogue.transaction do
+        Catalogue.create(@items)
+      end
+      #render :show, status: :created, location: @catalogue
+      render json: {"message": "Catalogue Saved in database"}, status: :created
+    rescue
       render json: @catalogue.errors, status: :unprocessable_entity
     end
   end
