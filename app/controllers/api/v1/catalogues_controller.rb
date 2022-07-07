@@ -40,7 +40,7 @@ class Api::V1::CataloguesController < ApplicationController
   # PATCH/PUT /catalogues/1.json
   def update
     if @catalogue.update(catalogue_params)
-      render :show, status: :ok, location: @catalogue
+      render :show, status: :ok, location: api_v1_catalogues_url(@catalogue)
     else
       render json: @catalogue.errors, status: :unprocessable_entity
     end

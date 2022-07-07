@@ -13,115 +13,95 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/catalogues", type: :request do
-  # This should return the minimal set of attributes required to create a valid
-  # Catalogue. As you add validations to Catalogue, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
-  }
+  describe "acessando rotas" do
+    context "#index" do
+      it "deve retornar status 200" do
+        get api_v1_catalogues_path
+        expect(response).to have_http_status(200)
+      end
+    end
 
-  let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
-  }
+    it "verifica a quantidade de catalogos" do
+      FactoryBot.create(:catalogue)
 
-  # This should return the minimal set of values that should be in the headers
-  # in order to pass any filters (e.g. authentication) defined in
-  # CataloguesController, or in your router and rack
-  # middleware. Be sure to keep this updated too.
-  let(:valid_headers) {
-    {}
-  }
+      get "/api/v1/catalogues"
+      expect(JSON.parse(response.body).size).to eq(1)
+    end
 
-  describe "GET /index" do
-    it "renders a successful response" do
-      Catalogue.create! valid_attributes
-      get catalogues_url, headers: valid_headers, as: :json
-      expect(response).to be_successful
+    it "verifica rota .json" do
+        get "/api/v1/catalogues.json"
+        expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET /show" do
-    it "renders a successful response" do
-      catalogue = Catalogue.create! valid_attributes
-      get catalogue_url(catalogue), as: :json
-      expect(response).to be_successful
-    end
-  end
+  describe "GET" do
+    context "#show api/v1/catalogues/:id" do
+      it "return only catalogue/id" do
+        FactoryBot.create(:catalogue)
+        get "/api/v1/catalogues/1"
 
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Catalogue" do
-        expect {
-          post catalogues_url,
-               params: { catalogue: valid_attributes }, headers: valid_headers, as: :json
-        }.to change(Catalogue, :count).by(1)
-      end
-
-      it "renders a JSON response with the new catalogue" do
-        post catalogues_url,
-             params: { catalogue: valid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "does not create a new Catalogue" do
-        expect {
-          post catalogues_url,
-               params: { catalogue: invalid_attributes }, as: :json
-        }.to change(Catalogue, :count).by(0)
-      end
-
-      it "renders a JSON response with errors for the new catalogue" do
-        post catalogues_url,
-             params: { catalogue: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
+        expect(response).to have_http_status(:success)
       end
     end
   end
 
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+  describe "PUT" do
+    context "#update api/v1/catalogues/:id" do
+      it "atualiza um item no Catalogue" do
+        bot = FactoryBot.create(:catalogue)
+        bot.genre = "anime"
 
-      it "updates the requested catalogue" do
-        catalogue = Catalogue.create! valid_attributes
-        patch catalogue_url(catalogue),
-              params: { catalogue: new_attributes }, headers: valid_headers, as: :json
-        catalogue.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "renders a JSON response with the catalogue" do
-        catalogue = Catalogue.create! valid_attributes
-        patch catalogue_url(catalogue),
-              params: { catalogue: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the catalogue" do
-        catalogue = Catalogue.create! valid_attributes
-        patch catalogue_url(catalogue),
-              params: { catalogue: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.content_type).to match(a_string_including("application/json"))
+        expect(bot.genre).to eq('anime')
       end
     end
   end
 
-  describe "DELETE /destroy" do
-    it "destroys the requested catalogue" do
-      catalogue = Catalogue.create! valid_attributes
-      expect {
-        delete catalogue_url(catalogue), headers: valid_headers, as: :json
-      }.to change(Catalogue, :count).by(-1)
+  describe "DELETE " do
+    context "#destroy api/v1/catalogues/:id" do
+      it "Deleta um item no Catalogue" do
+        FactoryBot.create(:catalogue)
+        delete "/api/v1/catalogues/1"
+
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+  end
+
+  describe "Verificando filtros" do
+    context "filtro show_id" do
+      it "retornar show_id corretamente" do
+        bot = FactoryBot.create(:catalogue)
+
+        get "/api/v1/catalogues?show_id=#{bot[:show_id]}"
+        expect(JSON.parse(response.body)[0]['id']).to eq(bot[:show_id])
+      end
+    end
+
+    context "filtro genre" do
+      it "retornar genre corretamente" do
+        bot = FactoryBot.create(:catalogue)
+
+        get "/api/v1/catalogues?genre=#{bot[:genre]}"
+        expect(JSON.parse(response.body)[0]["genre"]).to eq(bot[:genre])
+      end
+    end
+
+    context "filtro title" do
+      it "retornar o title corretamente" do
+        bot = FactoryBot.create(:catalogue)
+
+        get "/api/v1/catalogues?title=#{bot[:title]}"
+        expect(JSON.parse(response.body)[0]["title"]).to eq(bot[:title])
+      end
+    end
+
+    context "filtro year" do
+      it "retornar o year corretamente" do
+        bot = FactoryBot.create(:catalogue)
+
+        get "/api/v1/catalogues?year=#{bot[:release_year]}"
+        expect(JSON.parse(response.body)[0]["year"]).to eq(bot[:release_year])
+      end
     end
   end
 end

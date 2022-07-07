@@ -1,16 +1,16 @@
 FactoryBot.define do
   factory :catalogue do
-    show_id { "MyString" }
-    genre { "MyString" }
-    title { "MyString" }
-    director { "MyString" }
-    cast { "MyText" }
-    country { "MyString" }
-    date_added { "2022-07-07 17:28:32" }
-    release_year { 1 }
-    rating { "MyString" }
-    duration { "MyString" }
-    listed_in { "MyString" }
-    description { "MyText" }
+    show_id {"s666"}
+    genre { Faker::Book.genre }
+    title { Faker::Movie.title }
+    director { Faker::Name.name }
+    cast { "#{Faker::Name.name}, #{Faker::Name.name}, #{Faker::Name.name}, #{Faker::Name.name}" }
+    country { Faker::Address.country }
+    date_added { Faker::Date.in_date_period }
+    release_year { Faker::Number.number(digits: 4) }
+    rating { "TV-MA" }
+    duration { "#{Faker::Number.number(digits: 2)} min" }
+    listed_in { Faker::Book.genre }
+    description { Faker::Lorem.paragraphs }
   end
 end
