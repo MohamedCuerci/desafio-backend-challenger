@@ -1,6 +1,6 @@
 require "csv"
 
-class CataloguesController < ApplicationController
+class Api::V1::CataloguesController < ApplicationController
   before_action :set_catalogue, only: %i[ show update destroy ]
 
   # GET /catalogues
