@@ -1,1 +1,1 @@
-json.partial! "catalogues/catalogue", catalogue: @catalogue
+json.partial! "catalogues/catalogue", cached: true, catalogue: @catalogue

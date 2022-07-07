@@ -6,7 +6,7 @@ class CataloguesController < ApplicationController
   # GET /catalogues
   # GET /catalogues.json
   def index
-    @catalogues = Catalogue.all
+    @catalogues = Catalogue.filter(search_params).order("release_year ASC")
   end
 
   # GET /catalogues/1
@@ -61,5 +61,10 @@ class CataloguesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def catalogue_params
       params.require(:catalogue).permit(:show_id, :genre, :title, :director, :cast, :country, :date_added, :release_year, :rating, :duration, :listed_in, :description)
+    end
+
+    # Allow a list of params search passed to URL
+    def search_params
+      params.slice(:show_id, :genre, :title, :country, :date_added, :release_year, :description)
     end
 end

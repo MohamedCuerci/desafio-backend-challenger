@@ -1,1 +1,1 @@
-json.array! @catalogues, partial: "catalogues/catalogue", as: :catalogue
+json.array! @catalogues, partial: "catalogues/catalogue", cached: true, as: :catalogue
