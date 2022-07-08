@@ -3,19 +3,16 @@ require "csv"
 class Api::V1::CataloguesController < ApplicationController
   before_action :set_catalogue, only: %i[ show update destroy ]
 
-  # GET /catalogues
-  # GET /catalogues.json
+  # GET /api/v1/catalogues
   def index
     @catalogues = Catalogue.filter(search_params).order("release_year ASC")
   end
 
-  # GET /catalogues/1
-  # GET /catalogues/1.json
+  # GET /api/v1/catalogues/1
   def show
   end
 
-  # POST /catalogues
-  # POST /catalogues.json
+  # POST /api/v1/catalogues
   def create
     begin
       @items = []
@@ -29,15 +26,14 @@ class Api::V1::CataloguesController < ApplicationController
       Catalogue.transaction do
         Catalogue.create(@items)
       end
-      #render :show, status: :created, location: @catalogue
+
       render json: {"message": "Catalogue Saved in database"}, status: :created
     rescue
       render json: @catalogue.errors, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /catalogues/1
-  # PATCH/PUT /catalogues/1.json
+  # PATCH/PUT /api/v1/catalogues/1
   def update
     if @catalogue.update(catalogue_params)
       render :show, status: :ok, location: api_v1_catalogues_url(@catalogue)
@@ -46,8 +42,7 @@ class Api::V1::CataloguesController < ApplicationController
     end
   end
 
-  # DELETE /catalogues/1
-  # DELETE /catalogues/1.json
+  # DELETE /api/v1/catalogues/1
   def destroy
     @catalogue.destroy
   end
