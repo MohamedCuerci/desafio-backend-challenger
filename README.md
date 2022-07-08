@@ -1,8 +1,8 @@
 # **Resposta ao "Desafio Backend Mobile2You-Dimensa"**
 
 ## **Objetivo Principal do desafio**
-Criar 2 endpoints, sendo eles:
-Um endpoint para listar todos os filmes cadastrados e outro endpoint para realizar a leitura de um arquivo CSV
+Criar 2 endpoints, sendo eles:<br>
+Um endpoint(#index) para listar todos os filmes cadastrados e outro endpoint(#create) para realizar a leitura e gravação de um arquivo CSV
 
 ### **Objetivos:**
 
@@ -33,7 +33,7 @@ pelo navegador acesse "http://localhost:3000/api/v1/catalogues" para vizualizar 
 
 Para filtrar os registros basta, após a url, adicionar "?campo=tipo", por exemplo "http://localhost:3000/api/v1/catalogues?genre=movie" retorna todos os registros com o genêro de filme.
 
-Para filtrar múltiplos parâmetros, separe-os com "&", por exemplo "http://localhost:3000/api/v1/catalogues?genre=movie&release_year=2020", retornaria todos os registros com o genêro igual a file e com a data de lançamento em 2020.
+Para filtrar múltiplos parâmetros, separe-os com "&", por exemplo "http://localhost:3000/api/v1/catalogues?genre=movie&release_year=2020", retornaria todos os registros com o genêro igual a movie e com a ano de lançamento em 2020.
 
 Eu criei um modulo chamado Filterable no model/concern/filterable.rb, nele criei uma função para filtrar TODOS os parametros que chegarem. No model criei escopos com os parametros e ditando a maneira que a busca é realizada. No controller apenas, passo a função e os parametros.<br>
 Dessa maneira, o código fica organizado e eu poderia usar a mesma lógica com outros models.
