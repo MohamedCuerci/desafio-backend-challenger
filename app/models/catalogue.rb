@@ -4,7 +4,7 @@ class Catalogue < ApplicationRecord
   validates :show_id, uniqueness: true
   #validates :title, uniqueness: true
 
-  #escopos para filtrar buscas
+  #escopos para buscas
   scope :filter_by_show_id, -> (show_id) { where("show_id LIKE ?", "%#{show_id}%")}
   scope :filter_by_genre, -> (genre) { where("genre LIKE ?", "%#{genre}%")}
   scope :filter_by_title, -> (title) { where("title LIKE ?", "%#{title}%")}
